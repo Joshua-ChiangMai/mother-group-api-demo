@@ -6,6 +6,20 @@ import { AppModule } from './app.module';
 export async function createApp() {
   const app = await NestFactory.create(AppModule);
 
+  // Allow the Beta UI (and other Coolify frontends) to call this API from another origin.
+  const allowedOrigins = [
+    'https://z5005rijz166p9ojs5rmkeoe.lanna.engineer',
+  ];
+  if (process.env.CORS_ORIGIN) {
+    allowedOrigins.push(
+      ...process.env.CORS_ORIGIN.split(',').map((value) => value.trim()).filter(Boolean),
+    );
+  }
+  app.enableCors({
+    origin: [...new Set(allowedOrigins)],
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
