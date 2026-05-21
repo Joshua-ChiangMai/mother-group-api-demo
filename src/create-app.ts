@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 export async function createApp() {
   const app = await NestFactory.create(AppModule);
 
-  // Allow the Beta UI (and other Coolify frontends) to call this API from another origin.
+  // test Allow the Beta UI (and other Coolify frontends) to call this API from another origin.
   const allowedOrigins = [
     'https://momwow.cru.engineer',
     'http://localhost:3002',
