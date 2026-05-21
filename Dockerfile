@@ -9,7 +9,17 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-ENV PORT=3001
-EXPOSE 3001
+# Persistent SQLite lives on a mounted volume, not in the ephemeral container layer.
+RUN mkdir -p /data
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+ENV PORT=3001
+ENV PROJECT_ALPHA_DB_LOCATION=/data/project-alpha.sqlite
+ENV PROJECT_ALPHA_DB_AUTOSAVE=true
+
+EXPOSE 3001
+VOLUME ["/data"]
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "dist/main.js"]

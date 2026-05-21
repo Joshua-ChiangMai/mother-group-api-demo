@@ -1,3 +1,7 @@
 node_modules
 dist
 .git
+
+# Do not bake host SQLite files into the image; data belongs on the /data volume.
+project-alpha.sqlite
+*.sqlite

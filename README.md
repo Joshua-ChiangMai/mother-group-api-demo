@@ -55,10 +55,38 @@ The app starts on `http://localhost:3001` by default.
 
 ```bash
 docker build -t project-alpha-nest-prototype .
-docker run --rm -p 3001:3001 project-alpha-nest-prototype
+docker run --rm -p 3001:3001 -v project-alpha-data:/data project-alpha-nest-prototype
+```
+
+Or use compose (named volume on `/data`):
+
+```bash
+docker compose up --build
 ```
 
 The container listens on port `3001` (`PORT` defaults to `3001`; override with `-e PORT=...`).
+
+### Persistent SQLite (`sql.js`)
+
+The database file must live on a **volume**, not inside the container filesystem, so redeploys keep data.
+
+| Environment variable | Default (Docker image) | Purpose |
+| --- | --- | --- |
+| `PROJECT_ALPHA_DB_LOCATION` | `/data/project-alpha.sqlite` | Full path to the SQLite file |
+| `PROJECT_ALPHA_DATA_DIR` | — | Alternative: directory + `PROJECT_ALPHA_DB_FILENAME` |
+| `PROJECT_ALPHA_DB_FILENAME` | `project-alpha.sqlite` | Used with `PROJECT_ALPHA_DATA_DIR` |
+| `PROJECT_ALPHA_DB_AUTOSAVE` | `true` | Persist sql.js changes to disk |
+
+Local `npm run start:dev` still uses `./project-alpha.sqlite` in the project directory when those variables are unset.
+
+#### Coolify
+
+1. Open the backend service → **Persistent Storage** (or **Volumes**).
+2. Add a volume with **mount path** `/data` (must match the image default).
+3. Leave `PROJECT_ALPHA_DB_LOCATION=/data/project-alpha.sqlite` (set in the Dockerfile) or set it explicitly in **Environment Variables**.
+4. Redeploy. The SQLite file is created on first start under `/data/project-alpha.sqlite` on the host-backed volume.
+
+`docker-entrypoint.sh` creates the mount directory if needed before Nest boots.
 
 ## Browser Testing
 

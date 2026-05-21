@@ -1,0 +1,15 @@
+# Local check for persistent SQLite (same layout as Coolify: volume on /data).
+services:
+  api:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: "3001"
+      PROJECT_ALPHA_DB_LOCATION: /data/project-alpha.sqlite
+      PROJECT_ALPHA_DB_AUTOSAVE: "true"
+    volumes:
+      - project-alpha-data:/data
+
+volumes:
+  project-alpha-data:
