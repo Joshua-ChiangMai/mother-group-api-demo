@@ -8,7 +8,9 @@ export async function createApp() {
 
   // Allow the Beta UI (and other Coolify frontends) to call this API from another origin.
   const allowedOrigins = [
-    'https://z5005rijz166p9ojs5rmkeoe.lanna.engineer',
+    'https://momwow.cru.engineer',
+    'http://localhost:3002',
+    'http://127.0.0.1:3002',
   ];
   if (process.env.CORS_ORIGIN) {
     allowedOrigins.push(
